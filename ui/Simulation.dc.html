@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>PVD 목표 두께 변경 시뮬레이션</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#3341C4}a:hover{color:#2531A0}
+</style>
+</helmet>
+<div style="min-height: 100vh; background: #E9EBEF; font-family: 'Noto Sans KR', sans-serif; color: #16181D; padding: 24px; box-sizing: border-box">
+<div style="max-width: 1440px; margin: 0 auto; background: #F5F6F8; border-radius: 28px; padding: 22px 26px 28px 14px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 14px">
+<nav aria-label="주 메뉴" style="flex: 0 0 56px; display: flex; flex-direction: column; align-items: center; gap: 14px; padding-top: 88px">
+<a href="Main.dc.html" aria-label="공정 현황" title="공정 현황" style="width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; background: #FFFFFF; color: #5E6573"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8"></path><path d="M5 10v10h14V10"></path></svg></a><a href="#" aria-label="레시피" title="레시피" style="width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; background: #FFFFFF; color: #5E6573"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"></rect><path d="M9 8h6M9 12h6M9 16h4"></path></svg></a><a href="#" aria-label="챔버" title="챔버" style="width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; background: #FFFFFF; color: #5E6573"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"></rect><rect x="13" y="4" width="7" height="7" rx="1.5"></rect><rect x="4" y="13" width="7" height="7" rx="1.5"></rect><rect x="13" y="13" width="7" height="7" rx="1.5"></rect></svg></a><a href="Simulation.dc.html" aria-label="공정 시뮬레이션" title="공정 시뮬레이션" aria-current="page" style="width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; background: #5262F0; color: #ffffff; box-shadow: 0 0 0 6px #EEF0FE"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h3l3-7 4 14 3-7h3"></path></svg></a><a href="#" aria-label="모델 검증" title="모델 검증" style="width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; background: #FFFFFF; color: #5E6573"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4L19 6"></path></svg></a><a href="#" aria-label="설정" title="설정" style="width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; background: #FFFFFF; color: #5E6573"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"></path></svg></a>
+</nav>
+<main style="flex: 999 1 640px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap">
+<span style="width: 34px; height: 34px; border-radius: 50%; border: 2px solid #16181D; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #16181D; flex: 0 0 34px">PV</span>
+<label style="flex: 0 1 300px; display: flex; align-items: center; gap: 8px; height: 38px; background: #FFFFFF; border-radius: 999px; padding: 0 14px; color: #9AA1AD; font-size: 13px; min-width: 0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6"></circle><path d="M20 20l-4-4"></path></svg><input type="search" placeholder="챔버, 시나리오 검색" aria-label="검색" style="border: none; outline: none; background: transparent; font-size: 13px; width: 100%; font-family: inherit; color: #16181D"></label>
+<span style="flex: 1 1 0"></span>
+<span style="display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 14px; background: #FFFFFF; border-radius: 999px; font-size: 12px; color: #16181D">AlCu PVD · 챔버 16대<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></span>
+<button type="button" aria-label="알림" style="width: 38px; height: 38px; border-radius: 50%; border: none; background: #FFFFFF; color: #5E6573; display: flex; align-items: center; justify-content: center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 0112 0v5l2 2H4z"></path><path d="M10 21h4"></path></svg></button>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap">
+<div><h1 style="margin: 0; font-size: 24px; font-weight: 500">목표 두께 변경 시뮬레이션</h1><p style="margin: 4px 0 0; font-size: 12px; color: #9AA1AD">SimPy 가상 공정 {{days}}일 · 목표를 바꾸면 챔버별 증착 시간이 어떻게 재조정되는지 미리 봅니다</p></div>
+<div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap"><span style="{{dayPill}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M12 8v4l3 2"></path></svg>{{dayLabel}}</span><sc-if value="{{canPlay}}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{play}}" style="{{playStyle}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 5l12 7-12 7z"></path></svg>재생</button></sc-if><sc-if value="{{canPause}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{pause}}" style="{{pauseStyle}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M12 8v4l3 2"></path></svg>일시정지</button></sc-if><button type="button" onClick="{{restart}}" style="{{pauseStyle}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M12 7v5h4"></path></svg>처음부터</button><button type="button" onClick="{{exportCsv}}" style="display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 14px; background: #FFFFFF; border: none; border-radius: 999px; font-size: 12px; font-family: inherit; color: #16181D; cursor: pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"></path></svg>결과 내보내기</button></div>
+</div>
+<div style="height: 4px; border-radius: 2px; background: #E1E4EA; overflow: hidden"><div style="{{progressStyle}}"></div></div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px"><section style="background: #FFFFFF; border-radius: 18px; padding: 18px 20px; min-width: 0; display: flex; flex-direction: column; gap: 14px; flex: 1 1 300px; box-sizing: border-box; flex: 1 1 100%; flex-direction: row; flex-wrap: wrap; align-items: flex-end; gap: 14px">
+<div style="flex: 1 1 220px"><div style="font-size: 15px; font-weight: 500">레시피 변경</div><div style="font-size: 11px; color: #9AA1AD">목표 두께만 바꿀 수 있어요. 파워·가스·압력은 학습 범위 밖이라 재학습이 필요합니다</div><sc-if value="{{inputMsg}}" hint-placeholder-val="{{ false }}"><div style="{{inputMsgStyle}}">{{inputMsg}}</div></sc-if></div>
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: #9AA1AD">현재 목표<input type="number" value="{{curT}}" readonly="" style="height: 38px; border: 1px solid #ECEEF2; border-radius: 999px; padding: 0 14px; font-size: 13px; background: #F5F6F8; box-sizing: border-box; font-family: inherit; color: #16181D; width: 96px; color: #5E6573"></label>
+<span style="padding-bottom: 10px; color: #9AA1AD"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: #9AA1AD">새 목표<input type="number" value="{{dT2}}" step="0.1" min="{{tmin}}" max="{{tmax}}" onChange="{{onT2}}" style="height: 38px; border: 1px solid #ECEEF2; border-radius: 999px; padding: 0 14px; font-size: 13px; background: #F5F6F8; box-sizing: border-box; font-family: inherit; color: #16181D; width: 96px; font-weight: 700"></label>
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: #9AA1AD">적용일<input type="number" value="{{dDay}}" min="1" max="29" onChange="{{onDay}}" style="height: 38px; border: 1px solid #ECEEF2; border-radius: 999px; padding: 0 14px; font-size: 13px; background: #F5F6F8; box-sizing: border-box; font-family: inherit; color: #16181D; width: 76px"></label>
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: #9AA1AD">허용 범위<input type="number" value="{{dTol}}" step="0.1" min="0.1" max="3" onChange="{{onTol}}" style="height: 38px; border: 1px solid #ECEEF2; border-radius: 999px; padding: 0 14px; font-size: 13px; background: #F5F6F8; box-sizing: border-box; font-family: inherit; color: #16181D; width: 76px"></label>
+<button type="button" onClick="{{run}}" style="{{runStyle}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 5l12 7-12 7z"></path></svg>{{runLabel}}</button>
+</section></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px">
+<div style="background: #FFFFFF; border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0">
+<div style="display: flex; gap: 10px; align-items: center"><span style="width: 30px; height: 30px; border-radius: 50%; background: #EEF0FE; color: #3341C4; display: flex; align-items: center; justify-content: center; flex: 0 0 30px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="3"></circle></svg></span><div style="min-width: 0"><div style="font-size: 12px; font-weight: 500; color: #16181D">변경 후 ±{{tolS}} 이내</div><div style="font-size: 11px; color: #9AA1AD">{{period}} · 새 목표 기준</div></div></div>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap"><span style="font-size: 22px; font-weight: 500; color: #16181D">{{k1}}</span><span style="{{k1Badge}}">그대로 두면 {{k1b}}</span></div>
+</div>
+<div style="background: #FFFFFF; border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0">
+<div style="display: flex; gap: 10px; align-items: center"><span style="width: 30px; height: 30px; border-radius: 50%; background: #FDF0E7; color: #E8762F; display: flex; align-items: center; justify-content: center; flex: 0 0 30px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M8 12h8M12 8v8"></path></svg></span><div style="min-width: 0"><div style="font-size: 12px; font-weight: 500; color: #16181D">변경 후 목표 이탈</div><div style="font-size: 11px; color: #9AA1AD">{{period}} · {{nAfter}}장 중</div></div></div>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap"><span style="font-size: 22px; font-weight: 500; color: #16181D">{{k2}}장</span><span style="{{k2Badge}}">그대로 두면 {{k2b}}장</span></div>
+</div>
+<div style="background: #FFFFFF; border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0">
+<div style="display: flex; gap: 10px; align-items: center"><span style="width: 30px; height: 30px; border-radius: 50%; background: #F3EEFC; color: #7A4CC2; display: flex; align-items: center; justify-content: center; flex: 0 0 30px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 16L16 4l4 4L8 20z"></path><path d="M8 12l2 2M11 9l2 2M14 6l2 2"></path></svg></span><div style="min-width: 0"><div style="font-size: 12px; font-weight: 500; color: #16181D">변경 후 평균 두께</div><div style="font-size: 11px; color: #9AA1AD">새 목표 {{t2S}}</div></div></div>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap"><span style="font-size: 22px; font-weight: 500; color: #16181D">{{k3}}</span><span style="{{k3Badge}}">목표까지 {{gapS}}</span></div>
+</div>
+<div style="background: #FFFFFF; border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0">
+<div style="display: flex; gap: 10px; align-items: center"><span style="width: 30px; height: 30px; border-radius: 50%; background: #E6F6F7; color: #0E7C86; display: flex; align-items: center; justify-content: center; flex: 0 0 30px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M12 7v5h4"></path></svg></span><div style="min-width: 0"><div style="font-size: 12px; font-weight: 500; color: #16181D">평균 보정량 Δ</div><div style="font-size: 11px; color: #9AA1AD">챔버 {{nEq}}대 평균</div></div></div>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap"><span style="font-size: 22px; font-weight: 500; color: #16181D">{{k4}}</span><span style="font-size: 11px; font-weight: 500; color: #5E6573; background: #F1F2F5; padding: 3px 8px; border-radius: 999px">{{k4b}}</span></div>
+</div>
+<div style="background: #FFFFFF; border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0">
+<div style="display: flex; gap: 10px; align-items: center"><span style="width: 30px; height: 30px; border-radius: 50%; background: #FFF5E1; color: #8A4B00; display: flex; align-items: center; justify-content: center; flex: 0 0 30px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"></rect><rect x="13" y="4" width="7" height="7" rx="1.5"></rect><rect x="4" y="13" width="7" height="7" rx="1.5"></rect><rect x="13" y="13" width="7" height="7" rx="1.5"></rect></svg></span><div style="min-width: 0"><div style="font-size: 12px; font-weight: 500; color: #16181D">적용 가능 챔버</div><div style="font-size: 11px; color: #9AA1AD">도달 가능 웨이퍼 50% 이상</div></div></div>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap"><span style="font-size: 22px; font-weight: 500; color: #16181D">{{k5}}</span><span style="{{k5Badge}}">{{k5b}}</span></div>
+</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px"><section style="background: #FFFFFF; border-radius: 18px; padding: 18px 20px; min-width: 0; display: flex; flex-direction: column; gap: 14px; flex: 1 1 300px; box-sizing: border-box; flex: 2 1 600px"><div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap"><h2 style="margin: 0; font-size: 15px; font-weight: 500; color: #16181D">일별 평균 두께</h2><div style="display: flex; gap: 12px; font-size: 11px; color: #5E6573"><span style="display: flex; align-items: center; gap: 5px"><span style="width: 8px; height: 8px; border-radius: 50%; background: #5262F0"></span>보정 적용</span><span style="display: flex; align-items: center; gap: 5px"><span style="width: 8px; height: 8px; border-radius: 50%; background: #E8762F"></span>증착 시간 그대로</span><span style="display: flex; align-items: center; gap: 5px"><span style="width: 8px; height: 8px; border-radius: 50%; background: #3341C4"></span>목표</span></div><span style="display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 10px; border: 1px solid #ECEEF2; border-radius: 999px; font-size: 11px; color: #5E6573">{{days}}일<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></span></div><svg viewBox="0 0 760 260" width="100%" role="img" aria-label="{{c1.aria}}" style="display:block"><sc-for list="{{c1.grid}}" as="g"><line x1="46" x2="746" y1="{{g.y}}" y2="{{g.y}}" stroke="#ECEEF2" stroke-dasharray="3 4"></line><text x="38" y="{{g.ty}}" font-size="11" fill="#9AA1AD" text-anchor="end" font-weight="400" font-family="Noto Sans KR, sans-serif">{{g.l}}</text></sc-for><sc-for list="{{c1.xt}}" as="x"><text x="{{x.x}}" y="234" font-size="11" fill="#9AA1AD" text-anchor="middle" font-weight="400" font-family="Noto Sans KR, sans-serif">{{x.l}}</text></sc-for><polyline fill="none" stroke="#3341C4" stroke-width="1.5" stroke-dasharray="6 4" points="{{c1.tgt}}"></polyline><text x="70" y="{{c1.t1y}}" font-size="11" fill="#3341C4" text-anchor="start" font-weight="500" font-family="Noto Sans KR, sans-serif">목표 {{curT}}</text><text x="744" y="{{c1.t2y}}" font-size="11" fill="#3341C4" text-anchor="end" font-weight="500" font-family="Noto Sans KR, sans-serif">새 목표 {{t2S}}</text><rect x="{{c1.xc}}" y="18" width="{{c1.wc}}" height="196" fill="#EEF0FE" opacity="{{c1.shOp}}"></rect><polyline fill="none" stroke="#E8762F" stroke-width="2.5" stroke-linejoin="round" points="{{c1.cur}}"></polyline><polyline fill="none" stroke="#5262F0" stroke-width="2.8" stroke-linejoin="round" points="{{c1.rec}}"></polyline><line x1="{{c1.ax}}" x2="{{c1.ax}}" y1="{{c1.ay1}}" y2="{{c1.ay2}}" stroke="{{c1.acol}}" stroke-width="1.5" opacity="{{c1.anOp}}"></line><rect x="{{c1.bx}}" y="{{c1.by}}" width="150" height="44" rx="10" fill="#fff" stroke="#ECEEF2" opacity="{{c1.anOp}}"></rect><text x="{{c1.tx}}" y="{{c1.ty1}}" font-size="11" fill="{{c1.acol}}" opacity="{{c1.anOp}}" text-anchor="start" font-weight="500" font-family="Noto Sans KR, sans-serif">{{c1.atitle}}</text><text x="{{c1.tx}}" y="{{c1.ty2}}" font-size="11" fill="#16181D" opacity="{{c1.anOp}}" text-anchor="start" font-weight="500" font-family="Noto Sans KR, sans-serif">평균 {{k3}} · 목표까지 {{gapS}}</text><text x="{{c1.lx}}" y="30" font-size="11" fill="#5E6573" text-anchor="start" font-weight="500" font-family="Noto Sans KR, sans-serif">{{day}}일 · 목표 변경</text></svg></section><section style="background: #FFFFFF; border-radius: 18px; padding: 18px 20px; min-width: 0; display: flex; flex-direction: column; gap: 14px; flex: 1 1 300px; box-sizing: border-box; flex: 1 1 300px"><div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap"><h2 style="margin: 0; font-size: 15px; font-weight: 500; color: #16181D">목표를 어디까지 바꿀 수 있나</h2><div style="display: flex; gap: 12px; font-size: 11px; color: #5E6573"><span style="display: flex; align-items: center; gap: 5px"><span style="width: 8px; height: 8px; border-radius: 50%; background: #5262F0"></span>보정 적용</span><span style="display: flex; align-items: center; gap: 5px"><span style="width: 8px; height: 8px; border-radius: 50%; background: #E8762F"></span>그대로</span></div></div><svg viewBox="0 0 400 220" width="100%" role="img" aria-label="{{c2.aria}}" style="display:block"><rect x="{{c2.bx}}" y="24" width="{{c2.bw}}" height="160" fill="#EEF0FE" opacity="0.7"></rect><line x1="36" x2="390" y1="184" y2="184" stroke="#ECEEF2" stroke-dasharray="3 4"></line><text x="30" y="188" font-size="11" fill="#9AA1AD" text-anchor="end" font-weight="400" font-family="Noto Sans KR, sans-serif">0%</text><line x1="36" x2="390" y1="104" y2="104" stroke="#ECEEF2" stroke-dasharray="3 4"></line><text x="30" y="108" font-size="11" fill="#9AA1AD" text-anchor="end" font-weight="400" font-family="Noto Sans KR, sans-serif">40%</text><line x1="36" x2="390" y1="24" y2="24" stroke="#ECEEF2" stroke-dasharray="3 4"></line><text x="30" y="28" font-size="11" fill="#9AA1AD" text-anchor="end" font-weight="400" font-family="Noto Sans KR, sans-serif">80%</text><text x="63" y="202" font-size="11" fill="#9AA1AD" text-anchor="middle" font-weight="400" font-family="Noto Sans KR, sans-serif">150</text><text x="172" y="202" font-size="11" fill="#9AA1AD" text-anchor="middle" font-weight="400" font-family="Noto Sans KR, sans-serif">152</text><text x="281" y="202" font-size="11" fill="#9AA1AD" text-anchor="middle" font-weight="400" font-family="Noto Sans KR, sans-serif">154</text><text x="390" y="202" font-size="11" fill="#9AA1AD" text-anchor="middle" font-weight="400" font-family="Noto Sans KR, sans-serif">156</text><polyline fill="none" stroke="#E8762F" stroke-width="2" points="{{c2.cur}}"></polyline><polyline fill="none" stroke="#5262F0" stroke-width="2.5" points="{{c2.rec}}"></polyline><line x1="{{c2.x0}}" x2="{{c2.x0}}" y1="24" y2="184" stroke="#9AA1AD" stroke-dasharray="2 3"></line><line x1="{{c2.x1}}" x2="{{c2.x1}}" y1="24" y2="184" stroke="#16181D" stroke-dasharray="2 3"></line><rect x="{{c2.px}}" y="2" width="60" height="20" rx="10" fill="#16181D"></rect><text x="{{c2.ptx}}" y="16" font-size="11" fill="#fff" text-anchor="middle" font-weight="500" font-family="Noto Sans KR, sans-serif">{{t2S}}</text><circle cx="{{c2.x1}}" cy="{{c2.dy}}" r="4" fill="#5262F0"></circle><text x="{{c2.lx}}" y="{{c2.ly}}" font-size="11" fill="#3341C4" text-anchor="{{c2.la}}" font-weight="500" font-family="Noto Sans KR, sans-serif">{{c2.lab}}</text></svg><p style="margin: 0; font-size: 11px; color: #5E6573; line-height: 1.6">{{c2.note}}</p></section></div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px"><section style="background: #FFFFFF; border-radius: 18px; padding: 18px 20px; min-width: 0; display: flex; flex-direction: column; gap: 14px; flex: 1 1 300px; box-sizing: border-box; flex: 1 1 100%"><div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap"><h2 style="margin: 0; font-size: 15px; font-weight: 500; color: #16181D">챔버별 재조정</h2><div style="display: flex; gap: 12px; font-size: 11px; color: #5E6573"><span style="display: flex; align-items: center; gap: 5px"><span style="width: 8px; height: 8px; border-radius: 50%; background: #5262F0"></span>보정 적용</span><span style="display: flex; align-items: center; gap: 5px"><span style="width: 8px; height: 8px; border-radius: 50%; background: #E8762F"></span>그대로</span></div><span style="display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 10px; border: 1px solid #ECEEF2; border-radius: 999px; font-size: 11px; color: #5E6573">변경 후 {{period}}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></span></div><div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px"><sc-for list="{{cards}}" as="c" hint-placeholder-count="16"><div style="border: 1px solid #ECEEF2; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 8px; min-width: 0">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 6px"><span style="font-size: 14px; font-weight: 500">{{c.name}}</span><span style="{{c.tagStyle}}">{{c.tag}}</span></div>
+<div style="display: flex; justify-content: space-between; font-size: 11px; color: #9AA1AD"><span>보정량 Δ</span><span style="color: #16181D; font-weight: 500">{{c.delta}}</span></div>
+<div style="position: relative; height: 6px; border-radius: 3px; background: #EEF0F4"><div style="{{c.barRec}}"></div><div style="{{c.barCur}}"></div></div>
+<div style="display: flex; justify-content: space-between; font-size: 11px; color: #9AA1AD"><span>변경 후 ±{{tolS}}</span><span>{{c.cur}} → <b style="color: #16181D; font-weight: 500">{{c.rec}}</b></span></div>
+</div></sc-for></div></section></div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px"><section style="background: #FFFFFF; border-radius: 18px; padding: 18px 20px; min-width: 0; display: flex; flex-direction: column; gap: 14px; flex: 1 1 300px; box-sizing: border-box; flex: 1 1 300px"><div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap"><h2 style="margin: 0; font-size: 15px; font-weight: 500; color: #16181D">일별 ±{{tolS}} 이내</h2><div style="display: flex; gap: 12px; font-size: 11px; color: #5E6573"><span style="display: flex; align-items: center; gap: 5px"><span style="width: 8px; height: 8px; border-radius: 50%; background: #5262F0"></span>보정 적용</span><span style="display: flex; align-items: center; gap: 5px"><span style="width: 8px; height: 8px; border-radius: 50%; background: #E8762F"></span>그대로</span></div></div><svg viewBox="0 0 400 200" width="100%" role="img" aria-label="{{c3.aria}}" style="display:block"><sc-for list="{{c3.grid}}" as="g"><line x1="36" x2="390" y1="{{g.y}}" y2="{{g.y}}" stroke="#ECEEF2" stroke-dasharray="3 4"></line><text x="30" y="{{g.ty}}" font-size="11" fill="#9AA1AD" text-anchor="end" font-weight="400" font-family="Noto Sans KR, sans-serif">{{g.l}}</text></sc-for><sc-for list="{{c3.bars}}" as="b"><rect x="{{b.x}}" y="{{b.y}}" width="{{b.w}}" height="{{b.h}}" rx="2" fill="{{b.fill}}"></rect><rect x="{{b.ox}}" y="{{b.oy}}" width="4.7" height="3" rx="1" fill="#E8762F"></rect></sc-for><sc-for list="{{c3.xt}}" as="x"><text x="{{x.x}}" y="184" font-size="11" fill="#9AA1AD" text-anchor="middle" font-weight="400" font-family="Noto Sans KR, sans-serif">{{x.l}}</text></sc-for></svg><p style="margin: 0; font-size: 11px; color: #5E6573">{{c3.note}}</p></section><section style="background: #FFFFFF; border-radius: 18px; padding: 18px 20px; min-width: 0; display: flex; flex-direction: column; gap: 14px; flex: 1 1 300px; box-sizing: border-box; flex: 1 1 300px"><div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap"><h2 style="margin: 0; font-size: 15px; font-weight: 500; color: #16181D">시뮬레이션 가정</h2></div><ul style="margin: 0; padding-left: 18px; font-size: 12px; line-height: 1.8; color: #16181D">
+<li>'증착 시간 그대로'는 목표만 바꾸고 증착 시간은 기존대로 둔 경우</li>
+<li>웨이퍼 두께 = 같은 챔버·비슷한 타깃 사용량의 실제 웨이퍼 실측 + 보정 효과</li>
+<li>추천은 교차검증 예측 + 챔버별 피드백(λ=0.1)이라 과거 데이터 평가(64.0%)보다 낮게 나옴</li>
+<li>{{rangeNote}}</li>
+<li>가상 환경 결과이며 실제 공정 실험이 아님</li>
+<sc-if value="{{obsWarn}}" hint-placeholder-val="{{ false }}"><li style="color: #B42318; font-weight: 500">{{obsWarn}}</li></sc-if>
+</ul></section></div>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1640}}'>
+/* 값은 this.props.R (Python sim_result.target_change 결과). 입력값은 this.m에 두고 '시뮬레이션 실행' 때 window.dcSend로 보냄.
+   실행 결과는 0일부터 하루씩(0.7초) 재생: R.cells(일·챔버별 합계)를 this.k일까지 모아서 다시 계산 */
+const AMBER = 'color: #8A4B00; background: #FFF5E1', GREEN = 'color: #067647; background: #E9F8EF';
+const STEP_MS = 700;
+const sg = v => (v >= 0 ? '+' : '-') + Math.abs(v).toFixed(2);
+const pct1 = v => (v * 100).toFixed(1) + '%';
+const pct0 = v => Math.round(v * 100) + '%';
+const comma = n => Number(n).toLocaleString('en-US');
+const num = v => String(+(+v).toFixed(1));
+const r0 = v => Math.round(v);
+class Component extends DCLogic {
+constructor(props) { super(props); this.m = { pending: null }; this.timer = null; this.syncDraft(); this.k = ((props.R || {}).days || 30) - 1; }
+syncDraft() { const q = (this.props.R || {}).req || {}; this.m.t2 = (q.target2 ?? 153).toFixed(1); this.m.day = String(q.day ?? 10); this.m.tol = (q.tol ?? 1).toFixed(1); }
+componentDidUpdate() { const R = this.props.R || {}; if (this.m.pending && R.n === this.m.pending) { this.m.pending = null; this.syncDraft(); this.stopAnim(); this.k = 0; this.playAnim(); } }
+componentWillUnmount() { this.stopAnim(); }
+stopAnim() { if (this.timer) { clearInterval(this.timer); this.timer = null; } }
+playAnim() {
+  const last = this.props.R.days - 1;
+  if (this.timer) return; if (this.k >= last) this.k = 0;
+  this.timer = setInterval(() => { if (this.k >= last) { this.stopAnim(); } else this.k++; this.forceUpdate(); }, STEP_MS);
+  this.forceUpdate();
+}
+check() {
+const lo = this.props.tmin ?? 150, hi = this.props.tmax ?? 155;
+const t2 = parseFloat(this.m.t2), day = parseFloat(this.m.day), tol = parseFloat(this.m.tol);
+if (!isFinite(t2) || t2 < lo || t2 > hi) return '새 목표는 ' + lo.toFixed(1) + '~' + hi.toFixed(1) + ' 사이로 입력하세요';
+if (!isFinite(day) || day < 1 || day > 29 || Math.round(day) !== day) return '적용일은 1~29일 사이 정수로 입력하세요';
+if (!isFinite(tol) || tol < 0.1 || tol > 3) return '허용 범위는 0.1~3.0 사이로 입력하세요';
+return null;
+}
+// this.k일까지 모은 값
+agg(K) {
+  const R = this.props.R, day = R.req.day, nE = R.eqs.length;
+  const D = [], cb = R.eqs.map(() => ({ n: 0, d: 0 })), ca = R.eqs.map(() => ({ n: 0, d: 0, c: 0, r: 0 }));
+  for (let d = 0; d <= K; d++) D.push({ d: d, n: 0, cin: 0, rin: 0, cs: 0, rs: 0 });
+  const A = { n: 0, c: 0, r: 0, rs: 0 };
+  for (const [d, e, n, ci, ri, cs, rs, ds] of R.cells) {
+    if (d > K) continue;
+    const x = D[d]; x.n += n; x.cin += ci; x.rin += ri; x.cs += cs; x.rs += rs;
+    if (d < day) { cb[e].n += n; cb[e].d += ds; }
+    else { ca[e].n += n; ca[e].d += ds; ca[e].c += ci; ca[e].r += ri; A.n += n; A.c += ci; A.r += ri; A.rs += rs; }
+  }
+  const daily = D.filter(x => x.n).map(x => ({ d: x.d, cur: x.cs / x.n, rec: x.rs / x.n, cin: x.cin / x.n, rin: x.rin / x.n }));
+  const chambers = R.eqs.map((nm, e) => ({ name: nm, ok: !R.feas_bad.includes(nm),
+    dB: cb[e].n ? cb[e].d / cb[e].n : null, dA: ca[e].n ? ca[e].d / ca[e].n : null,
+    cur: ca[e].n ? ca[e].c / ca[e].n : null, rec: ca[e].n ? ca[e].r / ca[e].n : null }));
+  const mean = a => { const v = a.filter(x => x !== null); return v.length ? v.reduce((s, x) => s + x, 0) / v.length : null; };
+  return { daily: daily, chambers: chambers, n: A.n,
+    rec_in: A.n ? A.r / A.n : null, cur_in: A.n ? A.c / A.n : null, rec_out: A.n - A.r, cur_out: A.n - A.c,
+    mean_after: A.n ? A.rs / A.n : null, d_before: mean(chambers.map(c => c.dB)), d_after: mean(chambers.map(c => c.dA)) };
+}
+renderVals() {
+const R = this.props.R, q = R.req, T1 = q.target, T2 = q.target2, day = q.day, tol = q.tol, days = R.days, K = this.k;
+const A = this.agg(K), after = A.n > 0;
+const gap = after ? A.mean_after - T2 : 0, far = Math.abs(gap) > 0.1, tolS = num(tol), t2S = T2.toFixed(1);
+const fullGap = R.mean_after - T2, fullFar = Math.abs(fullGap) > 0.1;
+const pending = !!this.m.pending, err = this.check(), playing = !!this.timer;
+const [olo, ohi] = R.observed, ap = this.props.applied;
+let inputMsg = '', inputMsgStyle = 'margin-top: 6px; font-size: 11px; font-weight: 500; color: #B42318';
+if (err) inputMsg = err;
+else if (pending) { inputMsg = '시뮬레이션 계산 중…'; inputMsgStyle = 'margin-top: 6px; font-size: 11px; font-weight: 500; color: #3341C4'; }
+else if (ap) { inputMsg = ap.msg; inputMsgStyle = 'margin-top: 6px; font-size: 11px; font-weight: 500; color: ' + (ap.ok ? '#067647' : '#8A4B00'); }
+
+// ---- 일별 평균 두께 (세로 범위는 전체 30일 기준으로 고정) ----
+const D = A.daily, X = d => 46 + d * 700 / (days - 1);
+const vals = R.daily.flatMap(x => [x.cur, x.rec]).concat([T1, T2, R.mean_after]);
+let lo = Math.floor((Math.min(...vals) - 0.15) * 2) / 2, hi = Math.ceil((Math.max(...vals) + 0.15) * 2) / 2;
+const step = hi - lo > 3 ? 1 : 0.5;
+const Y = v => 176 - (v - lo) / (hi - lo) * 150;
+const grid1 = []; for (let v = lo; v <= hi + 1e-9; v += step) grid1.push({ y: r0(Y(v)), ty: r0(Y(v)) + 4, l: num(v) });
+const xt1 = []; for (let d = 0; d < days - 1; d += 5) if (days - 1 - d >= 3) xt1.push({ x: r0(X(d)), l: d + '일' }); xt1.push({ x: r0(X(days - 1)), l: (days - 1) + '일' });
+const xc = X(day), yt1 = Y(T1), yt2 = Y(T2), ym = after ? Y(A.mean_after) : yt2;
+const ax = r0(X(day + (days - 1 - day) * 0.63));
+let bx = ax + 8; if (bx + 150 > 746) bx = ax - 158;
+const by = Math.max(18, Math.min(176 - 44, Math.min(yt2, ym) - 2));
+const line = (k) => D.map(x => r0(X(x.d)) + ',' + r0(Y(x[k]))).join(' ');
+const showAnn = after && K >= Math.min(days - 1, day + 3);
+const c1 = {
+  aria: '일별 평균 두께: ' + day + '일째 목표를 ' + num(T2) + '으로 바꾸자 추천 적용은 ' + R.mean_after.toFixed(1) + ' 근처, 증착 시간을 그대로 두면 이전 수준에 머무름',
+  grid: grid1, xt: xt1,
+  tgt: '46,' + r0(yt1) + ' ' + r0(xc) + ',' + r0(yt1) + ' ' + r0(xc) + ',' + r0(yt2) + ' 746,' + r0(yt2),
+  t1y: T2 >= T1 ? r0(yt1) - 8 : r0(yt1) + 16, t2y: T2 >= T1 ? r0(yt2) - 8 : r0(yt2) + 16, xc: r0(xc), wc: 746 - r0(xc),
+  shOp: K >= day ? 0.45 : 0, anOp: showAnn ? 1 : 0,
+  cur: line('cur'), rec: line('rec'),
+  ax: ax, ay1: r0(yt2), ay2: r0(ym), acol: far ? '#8A4B00' : '#067647', atitle: far ? '보정 범위 한계' : '새 목표 근처 도달',
+  bx: bx, by: r0(by), tx: bx + 10, ty1: r0(by) + 18, ty2: r0(by) + 36, lx: r0(xc) + 6 };
+
+// ---- 목표를 어디까지 (RSM, 시간과 무관) ----
+const S = R.sweep, X2 = t => 63 + (t - 150) * 54.5, Y2 = p => 184 - Math.min(0.81, p) * 200;
+const okT = S.t.filter((t, i) => S.rec[i] >= R.cv_main);
+const x1 = r0(X2(T2)), px = Math.max(0, Math.min(340, x1 - 30));
+const c2 = {
+  aria: '목표 두께별 ±' + tolS + ' 이내 비율: ' + t2S + '은 보정 시 ' + pct0(R.rec_new),
+  bx: okT.length ? r0(X2(Math.min(...okT))) : 0, bw: okT.length ? r0(X2(Math.max(...okT)) - X2(Math.min(...okT))) : 0,
+  cur: S.t.map((t, i) => r0(X2(t)) + ',' + r0(Y2(S.cur[i]))).join(' '), rec: S.t.map((t, i) => r0(X2(t)) + ',' + r0(Y2(S.rec[i]))).join(' '),
+  x0: r0(X2(T1)), x1: x1, px: px, ptx: px + 30, dy: r0(Y2(R.rec_new)),
+  lx: x1 > 350 ? x1 - 8 : x1 + 8, la: x1 > 350 ? 'end' : 'start', ly: r0(Y2(R.rec_new)) - 6, lab: pct0(R.rec_new),
+  note: okT.length ? '파란 구간(' + num(Math.min(...okT)) + '~' + num(Math.max(...okT)) + ')은 보정 시 ±' + tolS + ' 이내 ' + pct0(R.cv_main) + ' 이상. 그 밖은 보정 범위가 부족합니다 (RSM 기준)'
+                   : '보정 시 ±' + tolS + ' 이내 ' + pct0(R.cv_main) + ' 이상인 목표가 없습니다 (RSM 기준)' };
+
+// ---- 일별 ±tol 이내 ----
+const bw = 354 / days, ymax = Math.max(...R.daily.map(x => Math.max(x.rin, x.cin))) > 0.7 ? 1 : 0.7;
+const Y3 = p => 166 - p / ymax * 152;
+const c3 = {
+  aria: '일별 목표 ±' + tolS + ' 이내 비율: 목표 변경 후에도 보정 시 약 ' + pct0(R.rec_in) + ' 유지',
+  grid: [0, ymax / 2, ymax].map(p => ({ y: r0(Y3(p)), ty: r0(Y3(p)) + 4, l: pct0(p) })),
+  bars: D.map(x => { const bx3 = 37 + x.d * bw, y = Y3(x.rin);
+    return { x: bx3.toFixed(1), y: y.toFixed(1), w: (bw - 2).toFixed(1), h: (166 - y).toFixed(1), fill: x.d < day ? '#AEB6F7' : '#5262F0', ox: (bx3 + 2.5).toFixed(1), oy: (Y3(x.cin) - 1).toFixed(1) }; }),
+  xt: [0, 10, 20, days - 1].map(d => ({ x: r0(37 + d * bw + (bw - 2) / 2), l: d + '일' })),
+  note: after ? '목표를 바꿔도 보정 적용은 바로 새 목표에 맞춰 약 ' + pct0(A.rec_in) + '를 유지합니다' : day + '일째에 목표가 바뀝니다' };
+
+// ---- 챔버별 ----
+const cards = A.chambers.map(c => ({
+  name: c.name, tag: c.ok ? '적용 가능' : '목표 도달 어려움',
+  tagStyle: 'font-size: 11px; ' + (c.ok ? GREEN : AMBER) + '; padding: 2px 7px; border-radius: 999px; white-space: nowrap',
+  delta: (c.dB === null ? '—' : sg(c.dB)) + ' → ' + (c.dA === null ? '—' : sg(c.dA)),
+  barRec: 'position: absolute; left: 0; top: 0; bottom: 0; width: ' + Math.min(100, r0((c.rec || 0) * 100 / 0.7)) + '%; border-radius: 3px; background: ' + (c.ok ? '#5262F0' : '#8A4B00'),
+  barCur: 'position: absolute; left: 0; top: 0; bottom: 0; width: ' + Math.min(100, r0((c.cur || 0) * 100 / 0.7)) + '%; border-radius: 3px; background: #E8762F',
+  cur: c.cur === null ? '—' : pct0(c.cur), rec: c.rec === null ? '—' : pct0(c.rec) }));
+
+const badge = s => 'font-size: 11px; font-weight: 500; ' + s + '; padding: 3px 8px; border-radius: 999px';
+const bad = R.feas_bad, dd = (A.d_after ?? 0) - (A.d_before ?? 0);
+const dr = R.drange.map(v => (v < 0 ? '−' : '+') + Math.abs(v).toFixed(2));
+const btnBase = 'height: 38px; border: none; border-radius: 999px; padding: 0 14px; font-size: 13px; font-weight: 500; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; ';
+return {
+  days: days, day: day, period: day + '~' + days + '일', tolS: tolS, t2S: t2S, curT: T1.toFixed(1), nEq: R.feas_total,
+  dayLabel: (K + 1) + '일째 / ' + days + '일', canPlay: !playing, canPause: playing,
+  dayPill: 'display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px; border-radius: 999px; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; background: ' + (K >= day ? '#EEF0FE' : '#FFFFFF') + '; color: ' + (K >= day ? '#3341C4' : '#16181D'),
+  playStyle: btnBase + 'background: #5262F0; color: #ffffff', pauseStyle: btnBase + 'background: #FFFFFF; color: #16181D',
+  progressStyle: 'height: 4px; width: ' + ((K + 1) / days * 100).toFixed(1) + '%; background: #5262F0; border-radius: 2px',
+  dT2: this.m.t2, dDay: this.m.day, dTol: this.m.tol, tmin: (this.props.tmin ?? 150).toFixed(1), tmax: (this.props.tmax ?? 155).toFixed(1),
+  inputMsg: inputMsg, inputMsgStyle: inputMsgStyle,
+  runLabel: pending ? '계산 중…' : '시뮬레이션 실행',
+  runStyle: 'height: 38px; border: none; background: #5262F0; color: #ffffff; border-radius: 999px; padding: 0 18px; font-size: 13px; font-weight: 500; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; cursor: ' + (pending || err ? 'default' : 'pointer') + '; opacity: ' + (pending || err ? 0.6 : 1),
+  k1: after ? pct1(A.rec_in) : '—', k1b: after ? pct1(A.cur_in) : '—', k1Badge: badge(!after || A.rec_in >= A.cur_in ? GREEN : AMBER),
+  nAfter: comma(A.n), k2: comma(A.rec_out), k2b: comma(A.cur_out), k2Badge: badge(A.rec_out <= A.cur_out ? GREEN : AMBER),
+  k3: after ? A.mean_after.toFixed(2) : '—', gapS: after ? sg(gap) : '—', k3Badge: badge(after && far ? AMBER : GREEN),
+  k4: (A.d_before === null ? '—' : sg(A.d_before)) + ' → ' + (A.d_after === null ? '—' : sg(A.d_after)), k4b: A.d_after === null ? '변경 전' : sg(dd) + (dd >= 0 ? ' 늘림' : ' 줄임'),
+  k5: R.feas_ok + ' / ' + R.feas_total, k5Badge: badge(bad.length ? AMBER : GREEN),
+  k5b: bad.length ? bad.slice(0, 3).join(', ') + (bad.length > 3 ? ' 외 ' + (bad.length - 3) + '대' : '') + ' 도달 어려움' : '모두 도달 가능',
+  c1: c1, c2: c2, c3: c3, cards: cards,
+  rangeNote: '보정 범위(Δ ' + dr[0] + ' ~ ' + dr[1] + ') 밖은 외삽이라 넓히지 않음 → ' + (fullFar ? num(T2) + '까지 완전히는 못 ' + (fullGap < 0 ? '올라감' : '내려감') : '새 목표 근처까지 맞춤'),
+  obsWarn: R.in_obs ? '' : '새 목표 ' + t2S + '은 관측 범위(' + olo.toFixed(1) + '~' + ohi.toFixed(1) + ') 밖 → 모델로 판단 불가, 실제 실험 필요',
+  onT2: e => { this.m.t2 = e.target.value; this.forceUpdate(); },
+  onDay: e => { this.m.day = e.target.value; this.forceUpdate(); },
+  onTol: e => { this.m.tol = e.target.value; this.forceUpdate(); },
+  run: () => { if (this.m.pending || this.check()) return; const n = Date.now(); this.m.pending = n;
+    window.dcSend && window.dcSend({ target2: parseFloat(this.m.t2), day: parseInt(this.m.day, 10), tol: parseFloat(this.m.tol), n: n }); this.forceUpdate(); },
+  play: () => this.playAnim(),
+  pause: () => { this.stopAnim(); this.forceUpdate(); },
+  restart: () => { this.stopAnim(); this.k = 0; this.playAnim(); },
+  exportCsv: () => {
+    const rows = [['구분', '챔버/일', '보정량Δ 변경 전', '보정량Δ 변경 후', '그대로 ±' + tolS + ' 이내', '보정 적용 ±' + tolS + ' 이내', '그대로 평균 두께', '보정 적용 평균 두께', '판정']];
+    R.chambers.forEach(c => rows.push(['챔버', c.name, c.dB, c.dA, c.cur, c.rec, '', '', c.ok ? '적용 가능' : '목표 도달 어려움']));
+    R.daily.forEach(x => rows.push(['일별', x.d, '', '', x.cin, x.rin, x.cur, x.rec, '']));
+    const csv = '﻿' + rows.map(r => r.map(v => v === null || v === undefined ? '' : (typeof v === 'number' ? +v.toFixed(4) : v)).join(',')).join('\n');
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    a.download = '목표변경_' + t2S + '_' + day + '일_tol' + tolS + '.csv'; document.body.appendChild(a); a.click(); a.remove(); }
+};
+}
+}
+</script>
+</body>
+</html>

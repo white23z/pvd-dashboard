@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>html,body{margin:0;padding:0;background:#E9EBEF}</style>
+</head>
+<body>
+<template id="dc-tpl"></template>
+<div id="app"></div>
+<script>
+/* 디자인 원본(.dc.html)을 띄우는 Streamlit 컴포넌트
+   - Python → 여기: args = {head, body, logic, props}  (body/logic은 처음 한 번만 적용, props는 매번 갱신)
+   - 여기 → Python: window.dcSend(value)  (Streamlit.setComponentValue)
+   - 디자인 문법 {{값}} / <sc-if> / <sc-for> / data-on-click·data-on-input 처리 */
+(function () {
+  const SVGNS = 'http://www.w3.org/2000/svg';
+  const HOLE = /\{\{\s*([\w$.]+)\s*\}\}/g, ONE = /^\{\{\s*([\w$.]+)\s*\}\}$/;
+  const look = (sc, p) => p.split('.').reduce((o, k) => (o == null ? undefined : o[k]), sc);
+  const val = (s, sc) => { const m = s.match(ONE); return m ? look(sc, m[1]) : s; };
+  const str = (s, sc) => s.replace(HOLE, (_, p) => { const v = look(sc, p); return v == null ? '' : String(v); });
+
+  // ---------- Streamlit 통신 ----------
+  const post = (type, extra) => window.parent.postMessage(Object.assign({ isStreamlitMessage: true, type: type }, extra), '*');
+  window.dcSend = v => post('streamlit:setComponentValue', { value: v, dataType: 'json' });
+  let lastH = 0;
+  function fit() {
+    const root = app.firstElementChild, inner = root && root.firstElementChild;
+    if (!inner) return;
+    const cs = getComputedStyle(root);
+    const h = Math.ceil(inner.getBoundingClientRect().height + parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom));
+    if (Math.abs(h - lastH) > 1) { lastH = h; post('streamlit:setFrameHeight', { height: h }); }
+  }
+
+  // ---------- 템플릿 → DOM ----------
+  function build(node, sc, out) {
+    if (node.nodeType === 3) { out.appendChild(document.createTextNode(str(node.nodeValue, sc))); return; }
+    if (node.nodeType !== 1) return;
+    const tag = node.localName;
+    if (tag === 'sc-if') { if (val(node.getAttribute('value') || '', sc)) node.childNodes.forEach(c => build(c, sc, out)); return; }
+    if (tag === 'sc-for') {
+      const list = val(node.getAttribute('list') || '', sc) || [], as = node.getAttribute('as') || 'item';
+      list.forEach((it, i) => { const s = Object.create(sc); s[as] = it; s.$index = i; node.childNodes.forEach(c => build(c, s, out)); });
+      return;
+    }
+    const el = node.namespaceURI === SVGNS ? document.createElementNS(SVGNS, tag) : document.createElement(tag);
+    el.__on = {};
+    for (const a of node.attributes) {
+      if (a.name.startsWith('hint-')) continue;
+      if (a.name.startsWith('data-on-')) { const f = val(a.value, sc); if (typeof f === 'function') el.__on[a.name.slice(8)] = f; continue; }
+      el.setAttribute(a.name, a.value.indexOf('{{') >= 0 ? str(a.value, sc) : a.value);
+    }
+    node.childNodes.forEach(c => build(c, sc, el));
+    out.appendChild(el);
+  }
+  function bind(el) {
+    for (const ev of Object.keys(el.__on || {})) {
+      el.__bound = el.__bound || {};
+      if (!el.__bound[ev]) {
+        el.__bound[ev] = true;
+        el.addEventListener(ev, e => { if (ev === 'input') el.__typed = el.value; const f = el.__on && el.__on[ev]; if (f) f(e); });
+      }
+    }
+  }
+  function bindAll(n) { if (n.nodeType !== 1) return; bind(n); n.querySelectorAll('*').forEach(bind); }
+  // 바뀐 부분만 고친다 (입력 중인 값·포커스 유지)
+  function morph(a, b) {
+    for (const at of [...b.attributes]) if (a.getAttribute(at.name) !== at.value) a.setAttribute(at.name, at.value);
+    for (const at of [...a.attributes]) if (!b.hasAttribute(at.name)) a.removeAttribute(at.name);
+    a.__on = b.__on; bind(a);
+    if (a.localName === 'input' && b.hasAttribute('value')) {
+      const nv = b.getAttribute('value');  // 방금 입력한 값이면 그대로 둔다 (입력 중 커서 유지)
+      if (a.value !== nv && !(document.activeElement === a && nv === a.__typed)) a.value = nv;
+    }
+    const ac = [...a.childNodes], bc = [...b.childNodes];
+    bc.forEach((n, i) => {
+      const o = ac[i];
+      if (!o) { a.appendChild(n); bindAll(n); }
+      else if (o.nodeType === 3 && n.nodeType === 3) { if (o.nodeValue !== n.nodeValue) o.nodeValue = n.nodeValue; }
+      else if (o.nodeType === 1 && n.nodeType === 1 && o.localName === n.localName && o.namespaceURI === n.namespaceURI) morph(o, n);
+      else { a.replaceChild(n, o); bindAll(n); }
+    });
+    for (let i = bc.length; i < ac.length; i++) a.removeChild(ac[i]);
+  }
+
+  window.DCLogic = class {
+    constructor(props) { this.props = props || {}; this.state = {}; }
+    setState(p) { Object.assign(this.state, typeof p === 'function' ? p(this.state) : p); schedule(); }
+    forceUpdate() { schedule(); }
+  };
+
+  const app = document.getElementById('app'), tplEl = document.getElementById('dc-tpl');
+  let comp = null, queued = false;
+  function schedule() { if (queued) return; queued = true; Promise.resolve().then(render); }
+  function render() {
+    queued = false; if (!comp) return;
+    const box = document.createElement('div'); box.id = 'app';
+    const vals = comp.renderVals();
+    tplEl.content.childNodes.forEach(c => build(c, vals, box));
+    morph(app, box); fit();
+  }
+
+  // ---------- 메뉴 링크 → Streamlit 페이지 이동 ----------
+  document.addEventListener('click', e => {
+    const a = e.target.closest && e.target.closest('a');
+    if (!a) return;
+    const slug = a.getAttribute('data-nav');
+    if (a.getAttribute('href') === '#' || slug) e.preventDefault();
+    if (!slug) return;
+    try {
+      const pd = window.parent.document;
+      const title = slug.replace(/_/g, ' ');   // 기본 페이지는 주소가 '/'라서 메뉴 이름으로도 찾는다
+      const hit = [...pd.querySelectorAll('[data-testid="stSidebarNav"] a[href], a[href]')].find(x => {
+        try { return decodeURIComponent(new URL(x.href).pathname).replace(/\/$/, '').endsWith('/' + slug) || x.textContent.trim() === title; } catch (_) { return false; }
+      });
+      if (hit) { hit.click(); return; }
+      const n = pd.createElement('a'); n.href = new URL('./' + slug, window.parent.location.href).href;
+      pd.body.appendChild(n); n.click(); n.remove();
+    } catch (_) { window.open('./' + slug, '_top'); }
+  });
+
+  // ---------- Python에서 온 값 ----------
+  window.addEventListener('message', ev => {
+    const d = ev.data;
+    if (!d || d.type !== 'streamlit:render') return;
+    const args = d.args || {};
+    if (!comp) {
+      document.head.insertAdjacentHTML('beforeend', args.head || '');
+      tplEl.innerHTML = args.body || '';
+      const s = document.createElement('script');
+      s.textContent = (args.logic || 'class Component extends DCLogic { renderVals() { return {}; } }') + '\nwindow.__DCComponent = Component;';
+      document.body.appendChild(s);
+      comp = new window.__DCComponent(args.props || {});
+      render();
+      if (comp.componentDidMount) comp.componentDidMount();
+      window.addEventListener('resize', fit);
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+      new ResizeObserver(fit).observe(app);
+    } else {
+      comp.props = args.props || {};
+      if (comp.componentDidUpdate) comp.componentDidUpdate();
+      schedule();
+    }
+  });
+  post('streamlit:componentReady', { apiVersion: 1 });
+})();
+</script>
+</body>
+</html>
